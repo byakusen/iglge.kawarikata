@@ -89,19 +89,22 @@
   /* --- 表 --- */
   .tbl{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;justify-content:center;padding:8px 14px 10px}
   .scroll{overflow-x:auto;padding:14px 14px}
-  .vt{--cw:78px;--lw:250px;width:max-content;margin:0 auto;position:relative}
+  .vt{--cw:78px;--lf:clamp(16px,2.3vh,22px);--nch:9;
+      --lw:max(180px, calc((var(--nch) + 1.9) * var(--lf) + 30px));
+      width:max-content;margin:0 auto;position:relative}
   .vt .row{display:grid;grid-template-columns:var(--lw) repeat(var(--n),var(--cw))}
-  .rl{display:flex;align-items:center;justify-content:center;gap:6px;padding:0 12px;white-space:nowrap;
+  .rl{display:flex;align-items:center;justify-content:center;gap:5px;white-space:nowrap;
+      padding:0 calc(var(--lf)*1.9) 0 10px;
       position:relative;
-      font-size:clamp(19px,2.7vh,26px);font-weight:700;border:2.5px solid var(--line)}
+      font-size:var(--lf);font-weight:700;border:2.5px solid var(--line)}
   .rl .mk{
-    position:absolute;right:22px;top:50%;font-size:1.25em;
+    position:absolute;right:calc(var(--lf)*0.5);top:50%;font-size:1.2em;line-height:1;
     transform:translateY(-50%) scale(.3);opacity:0;transition:transform .3s,opacity .3s;
   }
   .vt.marks .rl .mk{opacity:1;transform:translateY(-50%) scale(1)}
   .rl.x{background:var(--blue-l);border-color:var(--blue);color:var(--blue)}
   .rl.y{background:var(--pink-l);border-color:var(--pink);color:var(--pink);border-top:none}
-  .rl small{font-weight:400;font-size:clamp(14px,1.9vh,18px)}
+  .rl small{font-weight:400;font-size:1em}
   .cell{position:relative;height:clamp(58px,9.6vh,92px);display:grid;place-items:center;
         font-size:clamp(24px,3.4vh,32px);font-weight:700;
         background:#fff;border:2.5px solid var(--line);border-left:none;transition:background .15s}
@@ -128,9 +131,10 @@
   .right{position:relative}
   .qcard{flex:1;min-height:0;display:flex;flex-direction:column;border-color:var(--gold);background:#fffdf8;padding:10px 14px 12px}
   .qtop{display:flex;align-items:center;gap:8px;flex:none}
-  .qno{background:var(--gold);color:#fff;font-size:13px;font-weight:700;padding:3px 10px;border-radius:99px}
-  .dots{display:flex;gap:4px;margin-left:auto}
-  .dot{width:11px;height:11px;border-radius:50%;border:2px solid var(--line);background:#fff}
+  .qno{background:var(--gold);color:#fff;font-size:13px;font-weight:700;padding:3px 10px;border-radius:99px;
+       white-space:nowrap}
+  .dots{display:flex;gap:3px;margin-left:auto;flex:none}
+  .dot{width:9px;height:9px;border-radius:50%;border:2px solid var(--line);background:#fff}
   .dot.cur{border-color:var(--gold);box-shadow:0 0 0 2px #fbe4bd}
   .dot.ok{background:var(--green);border-color:var(--green)}
   .hint{
@@ -143,9 +147,12 @@
   .hint .eq{font-size:clamp(26px,3.8vh,36px);font-weight:700;letter-spacing:.08em}
   .hint .sq{color:var(--blue)} .hint .ci{color:var(--pink)} .hint .op{color:var(--ink-soft)}
 
-  .qtext{flex:1;min-height:0;display:flex;align-items:center;font-size:17px;line-height:1.65;padding:8px 0}
+  .qtext{flex:1;min-height:0;display:flex;
+         align-items:center;align-items:safe center;   /* はみ出したら上から見せる */
+         overflow-y:auto;
+         font-size:clamp(18px,2.85vh,26px);line-height:1.6;padding:8px 0}
   .qtext>div{width:100%}
-  .qtext .sub{font-size:14px;color:var(--ink-soft)}
+  .qtext .sub{font-size:.82em;color:var(--ink-soft)}
   .qtext .sq,.qtext .ci{font-weight:700;font-size:1.2em}
   .qtext .sq{color:var(--blue)}
   .qtext .ci{color:var(--pink)}
@@ -217,11 +224,22 @@
   .clear .rule{font-size:14px;line-height:1.7;color:var(--ink-soft);border-top:2px dashed var(--line);padding-top:10px}
   .clear .rule b{color:var(--gold)}
 
+  /* ===== 10問チャレンジ ===== */
+  #chalMount{margin:0 0 10px auto}
+  #chal-bar{background:#faf4fd;border:2.5px solid #ce93d8;box-shadow:none;padding:5px 14px;font-size:14px}
+  .chal-btn{letter-spacing:.03em}
+  .qcard.chal{border-color:#8e24aa;background:#fdf8ff}
+  .qcard.chal .qno{background:#8e24aa}
+  .qcard.chal .dots{display:none}
+  .qcard.chal .hint{border-color:#ce93d8;background:#f8ecfb}
+  .qcard.chal .hint .lb{color:#8e24aa}
+  .qcard.chal .navrow{display:none}
+
   /* 低い画面・せまい画面 */
   @media (max-height:760px){
     .key{height:44px;font-size:22px}
     .ansbox{height:48px;font-size:28px}
-    .qtext{font-size:16px}
+    .qtext{font-size:clamp(17px,2.5vh,21px)}
     .prob p{font-size:15px}
   }
   @media (max-width:900px){
@@ -238,6 +256,7 @@
     <h1>変わり方<span>調べ</span></h1>
     <nav id="tabs" role="tablist"></nav>
     <button id="newq" class="newq" type="button">べつの問題</button>
+    <div id="chalMount"></div>
   </header>
 
   <main>
@@ -281,6 +300,268 @@
 </div>
 
 <audio id="snd" src="data:audio/mpeg;base64,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" preload="auto"></audio>
+
+<!-- ===== 10問チャレンジ モジュール（challenge10.js をそのまま埋めこみ）===== -->
+<script>
+/* ============================================================
+   challenge10.js  —  「10問チャレンジ」だけを取り出したもの
+   ------------------------------------------------------------
+   もと：warizan81_kangae.html（小数のかけ算とわり算の筆算）⑪81
+   どんなアプリでも使えるように、CSS と HTML も中に入れてあります。
+   ほかのファイルは いりません（ライブラリなし・ネットもいらない）。
+
+   ■ 使いかた（3つ呼ぶだけ）
+     1. Challenge10.init({ mount: '#どこか', next: () => 次の問題を出す関数() })
+     2. 1問できたら          Challenge10.done()
+     3. まちがえたら          Challenge10.miss()
+
+   ■ そのほか
+     Challenge10.newProblem()  … 新しい問題を出したとき（その問題のミス数を0に）
+     Challenge10.reset()       … 数えなおす（タブを変えたときなど）
+     Challenge10.isOn()        … いまチャレンジ中か
+     Challenge10.stop()        … チャレンジをやめる
+     Challenge10.state         … {on, total, no, miss, missNow, perfect, t0}
+
+   ■ init に わたせるもの（ぜんぶ省略できます）
+     mount       ボタンを置く場所。'#id' か 要素。省略すると <body> の先頭
+     total       何問にするか（初期値 10）
+     next        次の問題を出す関数。これがないと自動で次に進みません
+     nextDelay   はなまるから次の問題までの待ち時間 ms（初期値 1800）
+     resultDelay 最後の問題から成せき表までの待ち時間 ms（初期値 1500）
+     label       ボタンの文字（初期値 '🏁 10問チャレンジ'）
+     sound       ボタンを押したとき鳴らす関数（例: () => playSound('click')）
+     onToggle    on/off が変わったとき呼ばれる関数 (on) => {}
+     onFinish    10問おわったとき呼ばれる関数 (成せき) => {}
+     record      true にすると、その日の最高記録を localStorage に残す
+     recordKey   記録の名前（アプリごとに変える。初期値 'challenge10'）
+     css         false にすると 見た目のCSSを入れない（自分で書くとき）
+   ============================================================ */
+(function (global) {
+    'use strict';
+
+    var CSS = `
+    .chal-btn {
+        font-size: 1rem; font-weight: bold; color: #6a1b9a;
+        background: #f3e5f5; border: 2px solid #ce93d8; border-radius: 20px;
+        padding: 7px 16px; box-shadow: 0 2px 0 #ce93d8; cursor: pointer;
+        font-family: inherit;
+    }
+    .chal-btn.on { color: #fff; background: #8e24aa; border-color: #6a1b9a; box-shadow: 0 2px 0 #4a148c; }
+    .chal-btn:focus-visible, .chal-btns button:focus-visible { outline: 3px solid #8e24aa; outline-offset: 2px; }
+    #chal-bar {
+        display: none; align-items: center; gap: 10px;
+        background: rgba(255,255,255,0.9); border-radius: 20px; padding: 6px 16px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        font-weight: bold; color: #6a1b9a; white-space: nowrap;
+    }
+    #chal-dots { color: #8e24aa; letter-spacing: 2px; font-size: 1.05rem; }
+    #chal-wrap { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    /* おわったときの成せき表 */
+    #chal-result {
+        display: none; position: fixed; left: 0; top: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.45); z-index: 900;
+        align-items: center; justify-content: center;
+    }
+    #chal-result.show { display: flex; }
+    .chal-card {
+        background: #fff; border-radius: 20px; padding: 28px 34px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.3); text-align: center; max-width: 90vw;
+    }
+    .chal-title { font-size: 1.8rem; font-weight: bold; color: #8e24aa; margin-bottom: 14px; }
+    .chal-lines { font-size: 1.25rem; font-weight: bold; color: #333; line-height: 2; }
+    .chal-lines b { color: #e53935; font-size: 1.5rem; }
+    .chal-msg { margin-top: 10px; color: #ff6f00; }
+    .chal-best { margin-top: 6px; font-size: 1rem; color: #6a1b9a; }
+    .chal-btns { display: flex; gap: 12px; justify-content: center; margin-top: 20px; }
+    .chal-btns button {
+        padding: 12px 20px; font-size: 1.1rem; font-weight: bold; font-family: inherit;
+        border-radius: 14px; cursor: pointer; border: none;
+    }
+    #btn-chal-again { color: #fff; background: #8e24aa; box-shadow: 0 3px 0 #4a148c; }
+    #btn-chal-quit  { color: #6a1b9a; background: #f3e5f5; border: 2px solid #ce93d8; }
+    @media (prefers-reduced-motion: reduce) { .chal-btn, .chal-btns button { transition: none; } }
+    `;
+
+    var BAR_HTML =
+        '<button id="btn-challenge" class="chal-btn" type="button"></button>' +
+        '<div id="chal-bar"><span id="chal-dots"></span><span id="chal-count"></span></div>';
+
+    var RESULT_HTML =
+        '<div class="chal-card">' +
+        '  <div class="chal-title">🏁 <span id="chal-total-title"></span>問 できました！</div>' +
+        '  <div class="chal-lines" id="chal-lines"></div>' +
+        '  <div class="chal-btns">' +
+        '    <button id="btn-chal-again" type="button">もう一度チャレンジ</button>' +
+        '    <button id="btn-chal-quit" type="button">やめる</button>' +
+        '  </div>' +
+        '</div>';
+
+    var cfg = null;
+    var chal = { on: false, total: 10, no: 0, miss: 0, missNow: 0, perfect: 0, t0: 0 };
+    var $ = function (id) { return document.getElementById(id); };
+
+    // --- きょうの記録（localStorage。使えないときは だまって何もしない）---
+    function todayKey() {
+        var d = new Date();
+        return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+    }
+    function loadBest() {
+        if (!cfg.record) return null;
+        try {
+            var raw = localStorage.getItem(cfg.recordKey);
+            if (!raw) return null;
+            var o = JSON.parse(raw);
+            // その日の記録だけ／問題数がちがう記録はまぜない
+            return (o && o.day === todayKey() && o.total === chal.total) ? o : null;
+        } catch (e) { return null; }
+    }
+    function saveBest(perfect, sec) {
+        if (!cfg.record) return null;
+        var best = loadBest();
+        // ノーミスの数が多いほうが上。同じなら 時間が短いほう
+        if (best && (best.perfect > perfect || (best.perfect === perfect && best.sec <= sec))) return best;
+        var o = { day: todayKey(), perfect: perfect, sec: sec, total: chal.total };
+        try { localStorage.setItem(cfg.recordKey, JSON.stringify(o)); } catch (e) { }
+        return o;
+    }
+
+    // --- 帯（○○○●…）の書きかえ ---
+    function chalUpdateBar() {
+        $('btn-challenge').classList.toggle('on', chal.on);
+        $('chal-bar').style.display = chal.on ? 'flex' : 'none';
+        if (!chal.on) return;
+        var dots = '';
+        for (var i = 0; i < chal.total; i++) dots += (i < chal.no) ? '●' : '○';
+        $('chal-dots').innerText = dots;
+        $('chal-count').innerText = Math.min(chal.no + 1, chal.total) + '問め / ' + chal.total;
+    }
+
+    // --- はじめから数えなおす ---
+    function chalReset() {
+        chal.no = 0; chal.miss = 0; chal.missNow = 0; chal.perfect = 0; chal.t0 = Date.now();
+        $('chal-result').classList.remove('show');
+        chalUpdateBar();
+    }
+
+    // --- 1問おわったときに呼ぶ ---
+    function chalDone() {
+        if (!chal.on) return;
+        if (chal.missNow === 0) chal.perfect++;
+        chal.no++;
+        chalUpdateBar();
+        if (chal.no < chal.total) {
+            setTimeout(function () {         // つぎの問題へ
+                if (!chal.on) return;
+                chal.missNow = 0;
+                if (cfg.next) cfg.next();
+            }, cfg.nextDelay);
+            return;
+        }
+        var sec = Math.floor((Date.now() - chal.t0) / 1000);
+        var msg = (chal.perfect === chal.total) ? 'ぜんぶノーミス！ すばらしい！'
+                : (chal.perfect >= chal.total - 2) ? 'よくがんばりました！'
+                : 'つぎは もっとできる！';
+        var best = saveBest(chal.perfect, sec);
+        var result = { perfect: chal.perfect, miss: chal.miss, sec: sec, total: chal.total };
+        setTimeout(function () {
+            $('chal-total-title').innerText = chal.total;
+            $('chal-lines').innerHTML =
+                '<div>ノーミスでできた問題　<b>' + chal.perfect + '</b> / ' + chal.total + '</div>' +
+                '<div>まちがえた回数　<b>' + chal.miss + '</b> 回</div>' +
+                '<div>かかった時間　<b>' + Math.floor(sec / 60) + '</b> 分 <b>' + (sec % 60) + '</b> 秒</div>' +
+                '<div class="chal-msg">' + msg + '</div>' +
+                (best ? '<div class="chal-best">きょうの最高記録　ノーミス ' + best.perfect + ' / ' + best.total +
+                        ' 問　　' + Math.floor(best.sec / 60) + '分' + (best.sec % 60) + '秒</div>' : '');
+            $('chal-result').classList.add('show');
+            $('btn-chal-again').focus();
+            if (cfg.onFinish) cfg.onFinish(result);
+        }, cfg.resultDelay);
+    }
+
+    // --- はじめの用意 ---
+    function init(opt) {
+        opt = opt || {};
+        cfg = {
+            total: opt.total || 10,
+            next: opt.next || null,
+            nextDelay: (opt.nextDelay === undefined) ? 1800 : opt.nextDelay,
+            resultDelay: (opt.resultDelay === undefined) ? 1500 : opt.resultDelay,
+            label: opt.label || '🏁 10問チャレンジ',
+            sound: opt.sound || null,
+            onToggle: opt.onToggle || null,
+            onFinish: opt.onFinish || null,
+            record: !!opt.record,
+            recordKey: opt.recordKey || 'challenge10',
+            css: (opt.css === undefined) ? true : opt.css
+        };
+        chal.total = cfg.total;
+        if (opt.label === undefined && cfg.total !== 10) cfg.label = '🏁 ' + cfg.total + '問チャレンジ';
+
+        // CSS
+        if (cfg.css && !$('chal-style')) {
+            var st = document.createElement('style');
+            st.id = 'chal-style';
+            st.textContent = CSS;
+            document.head.appendChild(st);
+        }
+        // ボタンと帯
+        var host = (typeof opt.mount === 'string') ? document.querySelector(opt.mount) : opt.mount;
+        var wrap = $('chal-wrap');
+        if (!wrap) {
+            wrap = document.createElement('div');
+            wrap.id = 'chal-wrap';
+            wrap.innerHTML = BAR_HTML;
+            if (host) host.appendChild(wrap);
+            else document.body.insertBefore(wrap, document.body.firstChild);
+        }
+        // 成せき表
+        if (!$('chal-result')) {
+            var res = document.createElement('div');
+            res.id = 'chal-result';
+            res.innerHTML = RESULT_HTML;
+            document.body.appendChild(res);
+        }
+        $('btn-challenge').innerText = cfg.label;
+
+        $('btn-challenge').addEventListener('click', function () {
+            chal.on = !chal.on;
+            if (cfg.sound) cfg.sound();
+            chalReset();
+            if (cfg.onToggle) cfg.onToggle(chal.on);
+            if (cfg.next) cfg.next();
+        });
+        $('btn-chal-again').addEventListener('click', function () {
+            chalReset();
+            if (cfg.next) cfg.next();
+        });
+        $('btn-chal-quit').addEventListener('click', function () {
+            chal.on = false;
+            chalReset();
+            if (cfg.onToggle) cfg.onToggle(false);
+            if (cfg.next) cfg.next();
+        });
+
+        chalUpdateBar();
+        return API;
+    }
+
+    var API = {
+        init: init,
+        done: chalDone,                                        // 1問できた
+        miss: function () { if (chal.on) { chal.miss++; chal.missNow++; } },  // まちがえた
+        newProblem: function () { chal.missNow = 0; },          // 新しい問題を出した
+        reset: chalReset,                                       // 数えなおす
+        stop: function () { chal.on = false; chalReset(); },    // やめる
+        isOn: function () { return chal.on; },
+        updateBar: chalUpdateBar,
+        setTotal: function (n) { chal.total = cfg.total = n; chalReset(); },
+        state: chal
+    };
+
+    global.Challenge10 = API;
+    if (typeof module !== 'undefined' && module.exports) module.exports = API;
+})(typeof window !== 'undefined' ? window : this);
+</script>
 
 <script>
 "use strict";
@@ -368,6 +649,7 @@ function makeA(v,sum){
   s.xLabel=v.xLabel; s.yLabel=v.yLabel; s.xUnit=v.xUnit; s.yUnit=v.yUnit;
   s.xs=[]; for(let i=1;i<sum;i++) s.xs.push(i);
   s.f=x=>sum-x; s.dx="＋1"; s.dy="−1";
+  s.xw=v.xw; s.yw=v.yw; s.hintEq=H; s.qpool=s.xs.slice();   /* 10問チャレンジ用 */
   s.build=v.build; s.draw=v.draw;
 
   const pool=s.xs.slice();
@@ -429,6 +711,7 @@ function makeB(v){
   s.prob=v.prob;
   s.xLabel=v.xLabel; s.yLabel=v.yLabel; s.xUnit=v.xUnit; s.yUnit=v.yUnit;
   s.xs=v.xs.slice(); s.f=x=>x+k; s.dx="＋1"; s.dy="＋1";
+  s.xw=v.xw; s.yw=v.yw; s.hintEq=H; s.qpool=v.pool.slice();   /* 10問チャレンジ用 */
   s.build=v.build; s.draw=drawTri;
 
   /* もんだい5〜10（ランダム・4問は○、2問は□をきく） */
@@ -501,6 +784,7 @@ function makeC(v){
   s.prob=v.prob;
   s.xLabel=v.xLabel; s.yLabel=v.yLabel; s.xUnit=v.xUnit; s.yUnit=v.yUnit;
   s.xs=v.xs.slice(); s.f=x=>x*m; s.dx="＋1"; s.dy="＋"+m;
+  s.xw=v.xw; s.yw=v.yw; s.hintEq=H; s.qpool=v.pool.slice();   /* 10問チャレンジ用 */
   s.build=v.build; s.draw=v.draw;
 
   const fw=pickN(4,v.pool,[v.big]), bk=pickN(2,v.pool,[v.big].concat(fw));
@@ -921,7 +1205,11 @@ function buildTable(sc){
   const n=sc.xs.length;
   t.style.setProperty("--n",n);
   t.style.setProperty("--cw", n>=9?"62px":n>=8?"70px":"78px");
-  t.style.setProperty("--lw", n>=8?"210px":"250px");
+  /* 見出しの文字数（半角は0.55字ぶん）から、列の幅を決める。
+     こうしておくと □/○ のしるしと単位が かさならない。 */
+  const emw=s=>{let w=0;for(const c of String(s||"")) w+=(c.charCodeAt(0)<0x2e80?0.55:1);return w;};
+  const nch=Math.max(emw(sc.xLabel)+emw(sc.xUnit), emw(sc.yLabel)+emw(sc.yUnit));
+  t.style.setProperty("--nch", nch.toFixed(2));
   const rl=(name,u,cls)=>{
     const d=document.createElement("div"); d.className="rl "+cls;
     d.innerHTML=name+' <small>'+u+'</small><span class="mk">'+(cls==="x"?"□":"○")+'</span>';
@@ -938,7 +1226,7 @@ function buildTable(sc){
   rowY.appendChild(rl(sc.yLabel,sc.yUnit,"y"));
   sc.yCells=sc.xs.map((v,i)=>{
     const c=document.createElement("div");c.className="cell y";c.textContent=sc.f(v);
-    c.onclick=()=>{sc.st.seen.has(i)?sc.st.seen.delete(i):sc.st.seen.add(i);paintTable(sc);};
+    c.onclick=()=>{if(inChal())return;sc.st.seen.has(i)?sc.st.seen.delete(i):sc.st.seen.add(i);paintTable(sc);};
     rowY.appendChild(c);return c;});
   t.appendChild(rowY);
 
@@ -978,7 +1266,7 @@ function paintWave(sc){
 function paintMarker(sc){
   const m=sc.marker; if(!m) return;
   const q=sc.qs[sc.st.q];
-  if(!q||!q.fill){ m.style.display="none"; return; }   // 表うめ問題のときだけ出す
+  if(inChal()||!q||!q.fill){ m.style.display="none"; return; }   // 表うめ問題のときだけ出す
   const i=sc.xs.indexOf(sc.st.x);
   const cx=sc.xCells[i], cy=sc.yCells[i];
   if(i<0||!cx||typeof cx.offsetLeft!=="number"){ m.style.display="none"; return; }
@@ -993,10 +1281,11 @@ function paintMarker(sc){
   if(first) setTimeout(()=>{ m.style.transition=""; },60);
 }
 function paintTable(sc){
-  const q=sc.qs[sc.st.q];
-  const cur = (q&&q.fill) ? sc.xs.indexOf(sc.st.x) : -1;   // 表うめのときだけ色づけ
+  const q=sc.qs[sc.st.q], ch=inChal();
+  const cur = (!ch && q && q.fill) ? sc.xs.indexOf(sc.st.x) : -1;   // 表うめのときだけ色づけ
   sc.xCells.forEach((c,i)=>c.classList.toggle("now",i===cur));
-  sc.yCells.forEach((c,i)=>{c.classList.toggle("now",i===cur);c.classList.toggle("hid",!sc.st.seen.has(i));});
+  /* チャレンジ中は ○ の段をぜんぶかくす（式を使って考える） */
+  sc.yCells.forEach((c,i)=>{c.classList.toggle("now",i===cur);c.classList.toggle("hid",ch||!sc.st.seen.has(i));});
   paintMarker(sc); paintWave(sc);
   setTimeout(()=>{ paintMarker(sc); paintWave(sc); },240);
 }
@@ -1010,7 +1299,7 @@ const S=()=>SCENES[act];
 SCENES.forEach((s,i)=>{
   const b=document.createElement("button");
   b.type="button"; b.textContent=s.tab; b.setAttribute("role","tab");
-  b.onclick=()=>{act=i;mount();};
+  b.onclick=()=>{act=i; if(inChal()) Challenge10.reset(); mount();};
   $("tabs").appendChild(b); s.tabBtn=b;
 });
 
@@ -1029,6 +1318,7 @@ $("newq").onclick=()=>{
     const cand=CVARS.filter(v=>v!==SCENES[2].vari);
     makeC(cand[Math.floor(Math.random()*cand.length)]);
   }
+  if(inChal()) Challenge10.reset();
   mount();
 };
 
@@ -1044,6 +1334,13 @@ PAD.forEach(k=>{
 
 function press(k){
   const sc=S(), st=sc.st, q=sc.qs[st.q];
+  if(inChal()){                       /* --- 10問チャレンジ中 --- */
+    if(!chalQ||chalQ.done) return;
+    if(k==="けす"){ st.input=""; paintAns(); return; }
+    if(k==="こたえ"){ check(); return; }
+    if(st.input.length>=3) return;
+    st.input+=k; paintAns(); return;
+  }
   if(st.ok.has(st.q)) return;
   if(k==="けす"){ st.input=""; paintAns(); return; }
   if(k==="こたえ"){ check(); return; }
@@ -1087,12 +1384,19 @@ function paintAns(){
   box.classList.remove("ng");
   box.textContent = st.input==="" ? "?" : st.input;
   box.classList.toggle("empty", st.input==="");
-  box.classList.toggle("ok", st.ok.has(st.q)||st.flash);
+  box.classList.toggle("ok", inChal() ? !!(chalQ&&chalQ.done) : (st.ok.has(st.q)||st.flash));
 }
 
 function check(){
   const sc=S(), st=sc.st, q=sc.qs[st.q];
   if(st.input==="") return;
+  if(inChal()){                       /* --- 10問チャレンジ中 --- */
+    if(!chalQ||chalQ.done) return;
+    if(Number(st.input)!==chalQ.a){ shakeAns(500); Challenge10.miss(); return; }
+    chalQ.done=true; paintAns(); celebrate();
+    Challenge10.done();               // ●が1つふえて つぎの問題へ
+    return;
+  }
   if(q.fill){ fillStep(true); return; }
   if(Number(st.input)!==q.a){
     const box=$("ansbox");
@@ -1138,7 +1442,7 @@ function paintQ(){
   $("qcard").classList.remove("done");
   if(q.fill){
     const i=Math.min(st.sub,q.fill.length-1), x=q.fill[i];
-    $("qno").textContent="もんだい 1　（"+(i+1)+"／"+q.fill.length+"）";
+    $("qno").textContent="もんだい 1（"+(i+1)+"／"+q.fill.length+"）";
     $("qtext").innerHTML=q.tmpl.replace("{x}",x);
     st.x=x; syncFig();
   }else{
@@ -1180,6 +1484,62 @@ function syncFig(){
   paintTable(sc);
 }
 
+/* ================= 10問チャレンジ ================= */
+/* 見つけた式を使って、ランダムな10問を続けて解く。
+   ・○の段は表からかくれるので、式であてはめて考えることになる
+   ・6わりで「○をきく問題」、4わりで「□をきく問題（逆算）」     */
+let chalQ=null, chalLast=[];
+function inChal(){ return typeof Challenge10!=="undefined" && Challenge10.isOn(); }
+
+function shakeAns(ms){
+  const st=S().st, box=$("ansbox");
+  box.classList.remove("ng"); void box.offsetWidth; box.classList.add("ng");
+  setTimeout(()=>{ st.input=""; paintAns(); },ms);
+}
+
+function genChalQ(sc){
+  const pool=sc.qpool&&sc.qpool.length?sc.qpool:sc.xs;
+  let x,askY,key,n=0;
+  do{
+    x=pool[Math.floor(Math.random()*pool.length)];
+    askY=Math.random()<0.6;
+    key=x+"/"+askY;
+  }while(chalLast.includes(key) && ++n<20);   // 直近3問と同じにならないように
+  chalLast.push(key); if(chalLast.length>3) chalLast.shift();
+  const y=sc.f(x);
+  return askY
+    ? {a:y,u:sc.yw,t:sc.xLabel+' '+SQ+' が <b>'+x+sc.xw+'</b> のときの、'+sc.yLabel+' '+CI+' は何'+sc.yw+'ですか。'}
+    : {a:x,u:sc.xw,t:sc.yLabel+' '+CI+' が <b>'+y+sc.yw+'</b> のときの、'+sc.xLabel+' '+SQ+' は何'+sc.xw+'ですか。'};
+}
+
+/* チャレンジの次の1問（off のときは ふつうの画面にもどす） */
+function nextChalQ(){
+  const sc=S(), st=sc.st;
+  st.input=""; st.flash=false;
+  if(!inChal()){ paintNormal(); return; }
+  Challenge10.newProblem();
+  chalQ=genChalQ(sc);
+  $("qcard").classList.remove("done");
+  $("qcard").classList.add("chal");
+  $("qno").textContent="チャレンジ "+Math.min(Challenge10.state.no+1,Challenge10.state.total)+"問め";
+  $("qtext").innerHTML=chalQ.t;
+  $("unit").textContent=chalQ.u;
+  $("hint").innerHTML='<span class="lb">見つけた式</span><div class="eq">'+sc.hintEq+'</div>';
+  $("hint").classList.add("show");
+  if(sc.tableEl) sc.tableEl.classList.add("marks");
+  paintAns(); paintTable(sc);
+}
+
+/* ふつうの10問の画面にもどす */
+function paintNormal(){
+  const sc=S();
+  chalQ=null;
+  $("qcard").classList.remove("chal");
+  paintQ();
+  if(sc.st.ok.size===sc.qs.length) showClear();
+  paintTable(sc);
+}
+
 function mount(){
   const sc=S();
   SCENES.forEach((s,i)=>s.tabBtn.setAttribute("aria-selected",i===act));
@@ -1194,13 +1554,26 @@ function mount(){
   $("sldLab").textContent=sc.xLabel+" を動かす";
   buildTable(sc);
   syncFig();
-  if(sc.st.ok.size===sc.qs.length) showClear(); else paintQ();
+  if(inChal()) nextChalQ();
+  else if(sc.st.ok.size===sc.qs.length) showClear();
+  else paintQ();
 }
 
 document.addEventListener("keydown",e=>{
   if(/^[0-9]$/.test(e.key)) press(e.key);
   else if(e.key==="Enter") press("こたえ");
   else if(e.key==="Backspace"||e.key==="Delete") press("けす");
+});
+
+/* ===== 10問チャレンジの用意 ===== */
+Challenge10.init({
+  mount:'#chalMount',
+  total:10,
+  next:nextChalQ,          // つぎの1問を出す（off のときは もとの画面にもどす）
+  nextDelay:1800,
+  resultDelay:1500,
+  record:false,            // true にすると「きょうの最高記録」を残す（共用PCでは注意）
+  recordKey:'kawarikata'
 });
 
 mount();
